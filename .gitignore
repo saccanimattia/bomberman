@@ -1,0 +1,7 @@
+#ignore __pycache__ folders
+
+__pycache__/
+
+lib/__pycache__/
+
+classes/__pycache__/
