@@ -39,8 +39,8 @@ def check_collision(a1: Actor, a2: Actor) -> bool:
     """
     x1, y1, w1, h1 = a1.pos() + a1.size()
     x2, y2, w2, h2 = a2.pos() + a2.size()
-    return (y2 <= y1 + h1 and y1 <= y2 + h2 and
-            x2 <= x1 + w1 and x1 <= x2 + w2)
+    return (y2 < y1 + h1 and y1 < y2 + h2 and
+            x2 < x1 + w1 and x1 < x2 + w2)
 
 
 class Arena():
@@ -145,3 +145,7 @@ class Arena():
         """Return the keys pressed at last tick.
         """
         return self._prev_keys
+
+    def remove_collision_with(self, actor_to_remove):
+        for collisions_list in self._collisions:
+            collisions_list[:] = [actor for actor in collisions_list if actor is not actor_to_remove]

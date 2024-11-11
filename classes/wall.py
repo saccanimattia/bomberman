@@ -17,4 +17,4 @@ class Wall(Actor):
         return self._w, self._h
 
     def sprite(self) -> Point:
-        return 80, 48
+        return 48, 48

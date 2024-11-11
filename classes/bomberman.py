@@ -1,4 +1,5 @@
-from classes.actor import Actor, Point, Arena
+from classes.actor import Actor, Point, Arena, check_collision
+from classes.wall import Wall
 
 TILE, STEP = 16, 4
 
@@ -24,6 +25,16 @@ class Bomberman(Actor):
 
         self._x += self._dx
         self._y += self._dy
+        
+        for actor in arena.actors():
+            if isinstance(actor, Wall) and check_collision(self, actor):
+                self._x -= self._dx
+                self._y -= self._dy
+                arena.collisions()
+                print(arena.collisions())
+                arena.remove_collision_with(actor)
+                break
+
 
     def pos(self) -> Point:
         return self._x, self._y
