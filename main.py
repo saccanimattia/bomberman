@@ -4,7 +4,7 @@
 @license This software is free - https://opensource.org/license/mit
 """
 
-from classes.actor import Arena, check_collision
+from classes.actor import Arena, check_collision_coordinate
 from classes.bomb import Bomb
 from classes.wall import Wall
 from classes.bomberman import Bomberman
@@ -79,11 +79,9 @@ def spawn_balloms():
 
 def is_enemy_colliding(x,y):
     for actor in arena.actors():
-        enemy = Ballom((x, y))
-        if isinstance(actor, Wall) and check_collision(enemy, actor):
+        if isinstance(actor, Wall) and check_collision_coordinate(actor, x, y, 16, 16):
             return True
     return False
-
 
 def tick():
     canvas_size = g2d.canvas_size()
@@ -92,8 +90,11 @@ def tick():
     g2d.draw_rect((0, 0), canvas_size)
     img = "img/bomberman.png"
     for a in arena.actors():
+        if isinstance(a, Bomb) :
+            continue
         g2d.draw_image(img, a.pos(), a.sprite(), a.size())
-    arena.tick(g2d.current_keys())  # Game logic
+    keys = g2d.current_keys()
+    arena.tick(keys)  # Game logic
 
 def main():
     global arena, g2d
@@ -101,10 +102,10 @@ def main():
     global enemies
     import lib.g2d as g2d  # game classes do not depend on g2d
     canvas_width, canvas_height = 432, 336
-    enemies = 5
+    enemies = 30
     arena = Arena((canvas_width, canvas_height))
 
-    create_arena()
+    create_arena() 
     arena.spawn(Bomberman((16, 16)))
 
     g2d.init_canvas(arena.size())
