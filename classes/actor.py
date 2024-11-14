@@ -31,12 +31,12 @@ class Actor:
         """
         raise NotImplementedError("Abstract method")
     
-    def death_animation(self):
+    def death_animation(self, speed: int, awaiting: int):
         """Called when the actor is destroyed.
         """
         raise NotImplementedError("Abstract method")
     
-    def isDying(self):
+    def isDying(self) -> bool:
         """Return True if the actor is being destroyed, False otherwise.
         """
         raise NotImplementedError("Abstract method")

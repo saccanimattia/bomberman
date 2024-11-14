@@ -11,10 +11,16 @@ Wall_destroying_steps = [(80, 48), (96, 48), (112, 48), (128, 48), (144, 48), (1
 
 class Wall(Actor):
     def __init__(self, pos, wall_type: str):
+        
+        #position
         self._x, self._y = pos
         self._w, self._h = TILE, TILE
+        
+        #sprite
         self._sprite = Wall_types[wall_type]
         self._type = wall_type
+        
+        #death
         self._death = False
         self._counter = 0
         self._steps = 0
@@ -42,8 +48,10 @@ class Wall(Actor):
     def sprite(self) -> Point:
         return self._sprite
     
-    def death_animation(self):
+    def death_animation(self, speed: int, awaiting: int):
         self._death = True
+        self._death_speed = speed
+        self._awaiting_death = awaiting
 
     def isDying(self):
         return self._death

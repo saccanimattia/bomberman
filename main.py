@@ -37,21 +37,21 @@ def insert_destroyable_walls():
         for y in range(32, canvas_height - 16, 32):
             if (x < safe_zone_x + safe_zone_size and y < safe_zone_y + safe_zone_size):
                 continue
-            if randint(0, 1) == 0:
+            if randint(0, 10) == 0:
                 arena.spawn(Wall((x, y), "destroyable"))
 
     for x in range(32, canvas_width - 16, 32):
         for y in range(16, canvas_height - 16, 32):
             if (x < safe_zone_x + safe_zone_size and y < safe_zone_y + safe_zone_size):
                 continue
-            if randint(0, 1) == 0:
+            if randint(0, 10) == 0:
                 arena.spawn(Wall((x, y), "destroyable"))
 
     for x in range(16, canvas_width - 16, 32):
         for y in range(16, canvas_height - 16, 32):
             if (x < safe_zone_x + safe_zone_size and y < safe_zone_y + safe_zone_size):
                 continue
-            if randint(0, 1) == 0:
+            if randint(0, 10) == 0:
                 arena.spawn(Wall((x, y), "destroyable"))
 
 def spawn_balloms():
