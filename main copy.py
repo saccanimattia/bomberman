@@ -4,12 +4,11 @@
 @license This software is free - https://opensource.org/license/mit
 """
 
-from classes.actor import Arena, check_collision_coordinate, Point
+from classes.actor import Arena, check_collision_coordinate
 from classes.bomb import Bomb
 from classes.wall import Wall
 from classes.bomberman import Bomberman
 from classes.ballom import Ballom
-from classes.bomberman_gui import BombermanGui
 
 from random import randint
 
@@ -23,12 +22,12 @@ def create_border():
     for x in range(0, canvas_width, 16):
         for y in range(0, canvas_height, 16):
             if x == 0 or y == 0 or x == canvas_width - 16 or y == canvas_height - 16:
-                arena.spawn(Wall((x, y), "indestructible", False))
+                arena.spawn(Wall((x, y), "indestructible"))
 
 def create_field():
     for x in range(32, canvas_width - 32, 32):
         for y in range(32, canvas_height - 32, 32):
-            arena.spawn(Wall((x, y), "indestructible", False))
+            arena.spawn(Wall((x, y), "indestructible"))
 
 def insert_destroyable_walls():
     safe_zone_x, safe_zone_y = 0, 0
@@ -39,21 +38,21 @@ def insert_destroyable_walls():
             if (x < safe_zone_x + safe_zone_size and y < safe_zone_y + safe_zone_size):
                 continue
             if randint(0, 10) == 0:
-                arena.spawn(Wall((x, y), "destroyable", False))
+                arena.spawn(Wall((x, y), "destroyable"))
 
     for x in range(32, canvas_width - 16, 32):
         for y in range(16, canvas_height - 16, 32):
             if (x < safe_zone_x + safe_zone_size and y < safe_zone_y + safe_zone_size):
                 continue
             if randint(0, 10) == 0:
-                arena.spawn(Wall((x, y), "destroyable", False))
+                arena.spawn(Wall((x, y), "destroyable"))
 
     for x in range(16, canvas_width - 16, 32):
         for y in range(16, canvas_height - 16, 32):
             if (x < safe_zone_x + safe_zone_size and y < safe_zone_y + safe_zone_size):
                 continue
             if randint(0, 10) == 0:
-                arena.spawn(Wall((x, y), "destroyable", False))
+                arena.spawn(Wall((x, y), "destroyable"))
 
 def spawn_balloms():
     x_start_field = 32
@@ -84,33 +83,46 @@ def is_enemy_colliding(x,y):
             return True
     return False
 
-def is_bomberman_died() -> Bomberman or True:
+def is_bomberman_died():
     for actor in arena.actors():
         if isinstance(actor, Bomberman):
-            return actor
+            return False
         
     return True
 
-def is_bomberman_win():
-    bomberman = is_bomberman_died()
-    for actor in arena.actors():
-        if isinstance(actor, Wall):
-            if actor.isDying() == True and actor.is_door() == True:
-                if actor.pos() == bomberman.pos():
-                    return True
-    return False
-
 def tick():
-    bombermanGui.tick()
+    canvas_size = g2d.canvas_size()
+    g2d.clear_canvas()
+    g2d.set_color((0, 120, 0))
+    g2d.draw_rect((0, 0), canvas_size)
+    img = "img/bomberman.png"
+    for a in arena.actors():
+        if isinstance(a, Bomb) :
+            continue
+        g2d.draw_image(img, a.pos(), a.sprite(), a.size())
+    keys = g2d.current_keys()
+    arena.tick(keys)  # Game logic
+    
+    if is_bomberman_died() == True:
+        g2d.set_color((255, 255, 255))
+        g2d.draw_rect((0,0), (canvas_width, canvas_height))
+        g2d.set_color((255, 0, 0))
+        g2d.draw_text("sei morto", (canvas_width//2, canvas_height//2), 30, "BombermanFonts.ttf")
 
 def main():
-    global bombermanGui
-    bombermanGui = BombermanGui("easy")
-    bombermanGui.create_arena()
-    import lib.g2d as g2d
+    global arena, g2d
+    global canvas_height, canvas_width
+    global enemies
+    import lib.g2d as g2d  # game classes do not depend on g2d
+    canvas_width, canvas_height = 432, 336
+    enemies = 5
+    arena = Arena((canvas_width, canvas_height))
+
+    create_arena() 
+    arena.spawn(Bomberman((16, 16)))
+
+    g2d.init_canvas(arena.size())
     g2d.main_loop(tick)
-    
-   
 
 if __name__ == "__main__":
     main()

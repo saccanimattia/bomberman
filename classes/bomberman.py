@@ -91,9 +91,12 @@ class Bomberman(Actor):
         #collision with walls
         for actor in arena.actors():
             if isinstance(actor, Wall) and check_collision(self, actor):
+                if actor.isDying() == True and actor.is_door() == True:
+                    break
                 self._x -= self._dx
                 self._y -= self._dy
                 break
+                    
 
     def pos(self) -> Point:
         return self._x, self._y
