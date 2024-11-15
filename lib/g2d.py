@@ -9,10 +9,13 @@ from urllib.request import urlopen
 import io, math, subprocess, sys
 try:
     import pygame as pg
+    import os 
 except:
     subprocess.call([sys.executable, "-m", "pip", "install", "pygame",
                      "--break-system-packages"])
     import pygame as pg
+    
+    # no need to install libraries because os is a standard lib
 
 Point = tuple[float, float]
 Color = tuple[float, float, float]
@@ -27,6 +30,7 @@ _size, _color = (640, 480), (127, 127, 127)
 _mouse_pos, _mouse_down = (0, 0), 0
 _curr_keys, _prev_keys = set(), set()
 _loaded = {}
+loaded_fonts = []
 
 def _tup(t: tuple, vmin=-math.inf, vmax=math.inf) -> tuple:
     return tuple(min(max(round(v), vmin), vmax) for v in t)
@@ -88,10 +92,17 @@ def draw_rect(pos: Point, size: Point) -> None:
     pg.draw.rect(surf, _color, rect)
     blit_drawing_surface()
 
-def draw_text(txt: str, pos: Point, size: int) -> None:
-    fname, fonts = "segoeuisymbol", pg.font.get_fonts()
-    fname = fname if fname in fonts else "freesansbold"
-    font = pg.font.SysFont(fname, int(size))
+def draw_text(txt: str, pos: Point, size: int, fname: str) -> None:
+    fonts = pg.font.get_fonts()
+    
+    fonts_folder = "./fonts"
+    loaded_fonts = load_fonts_from_folder(fonts_folder)
+    
+    if loaded_fonts != False and fname in loaded_fonts:
+        font = loaded_fonts[fname]
+    else:
+        font = pg.font.SysFont(fname, int(size))
+        
     surface = font.render(txt, True, _color)
     if len(_color) > 3 and _color[3] != 255:
         surface.set_alpha(_color[3])
@@ -215,3 +226,32 @@ def main_loop(tick=None, fps: int=30) -> None:
 def close_canvas() -> None:
     pg.quit()
     sys.exit()
+
+def load_fonts_from_folder(folder_path: str) -> dict[str, pg.font.FontType] or False:
+    """
+    load fonts in folder ./fonts
+    """
+    
+    fonts_folder = os.path.join(os.path.dirname(__file__), "fonts")
+    
+    loaded_fonts = {}
+    supported_formats = (".ttf", ".otf")  # Supported Formats
+    
+    # Read all file in the dir
+    if os.path.exists(fonts_folder) and os.path.isdir(fonts_folder) : 
+        for font_file in os.listdir(fonts_folder):
+            if font_file.lower().endswith(supported_formats):
+                font_path = os.path.join(fonts_folder, font_file)
+                try:
+                    font = pg.font.Font(font_path, 24)
+                    fontName = font_file.split(".")[0]
+                    loaded_fonts[font_file] = font
+                except Exception as e:
+                    print(f"Failed to load font {font_file}: {e}")
+        if loaded_fonts != {}:
+            return loaded_fonts
+        return False
+            
+    else:
+        print("folder path does not exist")
+        return False

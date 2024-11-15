@@ -22,19 +22,27 @@ class Wall(Actor):
         
         #death
         self._death = False
+        self._awaiting_death = 0
+        self._death_animation = 1
         self._counter = 0
-        self._steps = 0
+        self._death_step = 0
 
     def move(self, arena: Arena):
+        
+        #death animation
+        
         if self._death:
-            if self._steps > (len(Wall_destroying_steps) - 1):
+            if self._awaiting_death > 0:
+                self._awaiting_death -= 1
+                return
+            if self._death_step > (len(Wall_destroying_steps) - 1):
                 arena.kill(self)
                 return
             self._counter += 1
-            if self._counter % 2 == 0:
-                self._sprite = Wall_destroying_steps[self._steps]
-                self._steps += 1
-        return
+            if self._counter % self._death_speed == 0:
+                self._sprite = Wall_destroying_steps[self._death_step]
+                self._death_step += 1
+            return
     
     def getType(self):
         return self._type
@@ -50,8 +58,9 @@ class Wall(Actor):
     
     def death_animation(self, speed: int, awaiting: int):
         self._death = True
-        self._death_speed = speed
-        self._awaiting_death = awaiting
+        self._death_speed = 2
+        self._awaiting_death = 0
+        print("morto")
 
     def isDying(self):
         return self._death

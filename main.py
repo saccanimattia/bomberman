@@ -83,6 +83,13 @@ def is_enemy_colliding(x,y):
             return True
     return False
 
+def is_bomberman_died():
+    for actor in arena.actors():
+        if isinstance(actor, Bomberman):
+            return False
+        
+    return True
+
 def tick():
     canvas_size = g2d.canvas_size()
     g2d.clear_canvas()
@@ -95,6 +102,12 @@ def tick():
         g2d.draw_image(img, a.pos(), a.sprite(), a.size())
     keys = g2d.current_keys()
     arena.tick(keys)  # Game logic
+    
+    if is_bomberman_died() == True:
+        g2d.set_color((255, 255, 255))
+        g2d.draw_rect((0,0), (canvas_width, canvas_height))
+        g2d.set_color((255, 0, 0))
+        g2d.draw_text("sei morto", (canvas_width//2, canvas_height//2), 30, "BombermanFonts.ttf")
 
 def main():
     global arena, g2d
@@ -102,7 +115,7 @@ def main():
     global enemies
     import lib.g2d as g2d  # game classes do not depend on g2d
     canvas_width, canvas_height = 432, 336
-    enemies = 30
+    enemies = 5
     arena = Arena((canvas_width, canvas_height))
 
     create_arena() 

@@ -50,14 +50,7 @@ class Bomb(Actor):
         
         if self._counter % 20 == 0:
             if self._bomb_step > (len(Bomb_steps) - 1):
-                if self._bomb_explosion > (len(Bomb_explosion) - 1):
-                    
-                    #destroy objects and bomb
-                    self.destroy_objects(arena)
-                    arena.kill(self)
-                    
-                else:
-                    
+                if self._bomb_explosion < len(Bomb_explosion):
                     #explosion animation
                     self._sprite = Bomb_explosion[self._bomb_explosion]
                     self._bomb_explosion += 1
@@ -75,6 +68,12 @@ class Bomb(Actor):
             img = "img/bomberman.png"
             g2d.draw_image(img, (self._x, self._y), Bomb_explosion[self._bomb_explosion], (self._w, self._h))
             self.spawn_explosion(arena, img)
+        
+        if self._bomb_explosion > (len(Bomb_explosion) - 1):
+                    
+            #destroy objects and bomb
+            self.destroy_objects(arena)
+            arena.kill(self)
 
 
     def spawn_explosion(self, arena: Arena, img):
@@ -191,7 +190,7 @@ class Bomb(Actor):
         for actor in arena.actors():
             if check_collision_coordinate(actor, x, y, self._w, self._h):
                 if actor.isDying() == False and isinstance(actor, Bomb) == False:
-                    actor.death_animation(5, 0)
+                    actor.death_animation(1, 5)
                     break
 
     def pos(self) -> Point:

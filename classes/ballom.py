@@ -61,7 +61,7 @@ class Ballom(Actor):
                 self._x -= self._dx
                 self._y -= self._dy
             if isinstance(actor, Bomberman) and check_collision(self, actor):
-                actor.death_animation(15, 0)
+                actor.death_animation(5, 0)
 
     def pos(self) -> Point:
         return self._x, self._y
