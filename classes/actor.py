@@ -74,6 +74,7 @@ class Arena():
         self._actors = []
         self._curr_keys = self._prev_keys = tuple()
         self._collisions = []
+        self._points = 0
 
     def spawn(self, a: Actor):
         """Register an actor into this arena.
@@ -82,11 +83,18 @@ class Arena():
         if a not in self._actors:
             self._actors.append(a)
 
-    def kill(self, a: Actor):
+    def kill(self, a: Actor, points: int = 0):
         """Remove an actor from this arena.
         """
         if a in self._actors:
             self._actors.remove(a)
+            self.add_points(points)
+            
+    def add_points(self, points: int):
+        self._points += points
+        
+    def get_points(self):
+        return self._points
 
     def tick(self, keys=[]):
         """Move all actors (through their own move method).

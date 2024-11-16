@@ -44,17 +44,16 @@ class Bomberman(Actor):
                 self._awaiting_death -= 1
                 return
             if self._death_step > (len(Bomberman_destroying_steps) - 1):
-                arena.kill(self)
+                arena.kill(self, 0)
                 return
             self._counter += 1
             if self._counter % self._death_speed == 0:
                 self._sprite = Bomberman_destroying_steps[self._death_step]
                 self._death_step += 1
             return
-        
+
         #movement
         if self._x % TILE == 0 and self._y % TILE == 0:
-
             keys = arena.current_keys()
             direction_key = None
             self._prev_dx, self._prev_dy = self._dx, self._dy

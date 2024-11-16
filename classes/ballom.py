@@ -39,7 +39,7 @@ class Ballom(Actor):
                 self._awaiting_death -= 1
                 return
             if self._death_step > (len(Ballom_destroying_steps) - 1):
-                arena.kill(self)
+                arena.kill(self, 100)
                 return
             self._counter += 1
             if self._counter % self._death_speed == 0:

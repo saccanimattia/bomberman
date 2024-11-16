@@ -6,9 +6,7 @@ type = {
     "start": (0, 0),
     "game_over": (0, 16),
     "new_level": (0, 32),
-    "pause": (0, 48),
     "win": (0, 64),
-    "scorer": (0, 80),
 }
 
 class InfoDiv:

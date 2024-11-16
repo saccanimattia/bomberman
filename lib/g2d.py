@@ -92,22 +92,28 @@ def draw_rect(pos: Point, size: Point) -> None:
     pg.draw.rect(surf, _color, rect)
     blit_drawing_surface()
 
-def draw_text(txt: str, pos: Point, size: int, fname: str) -> None:
+def draw_text(txt: str, pos: Point, size: int, fname: str, align: str) -> None:
     fonts = pg.font.get_fonts()
     
     fonts_folder = "./fonts"
     loaded_fonts = load_fonts_from_folder(fonts_folder)
     
     if loaded_fonts != False and fname in loaded_fonts:
-        font = loaded_fonts[fname]
-    else:
+        font = pg.font.Font(("./lib/fonts/" + fname), int(size))
+    elif fname in fonts:
         font = pg.font.SysFont(fname, int(size))
+    else:
+        font = pg.font.Font("freesansbold", int(size))
         
     surface = font.render(txt, True, _color)
     if len(_color) > 3 and _color[3] != 255:
         surface.set_alpha(_color[3])
     (x, y), (w, h) = _tup(pos), surface.get_size()
-    _canvas.blit(surface, (x - w//2, y - h//2))
+    if align == "center":
+        x = x - w//2
+    if align == "end":  
+        x = x - w
+    _canvas.blit(surface, (x, y))
 
 def draw_polygon(points: list[Point]) -> None:
     surf = drawing_surface()

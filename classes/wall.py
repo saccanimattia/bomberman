@@ -44,7 +44,7 @@ class Wall(Actor):
                     self._sprite = Wall_types["door"]
                     return
                 else:
-                    arena.kill(self)
+                    arena.kill(self, -25)
                     return
             self._counter += 1
             if self._counter % self._death_speed == 0:
@@ -74,3 +74,8 @@ class Wall(Actor):
     
     def is_door(self):
         return self._is_door
+    
+    def is_destroyable(self):
+        if self._sprite ==  (64, 48):
+            return True
+        return False

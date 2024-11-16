@@ -28,6 +28,8 @@ Bomb_effect = {
 
 TILE = 16
 
+img = "src/img/bomberman.png"
+
 class Bomb(Actor):
     def __init__(self, pos):
         
@@ -48,7 +50,7 @@ class Bomb(Actor):
         #bomb explosion animation
         self._counter += 1
         
-        if self._counter % 20 == 0:
+        if self._counter % 15 == 0:
             if self._bomb_step > (len(Bomb_steps) - 1):
                 if self._bomb_explosion < len(Bomb_explosion):
                     #explosion animation
@@ -61,22 +63,20 @@ class Bomb(Actor):
                 self._bomb_step += 1
 
         if self._bomb_step < len(Bomb_steps):
-            img = "img/bomberman.png"
             g2d.draw_image(img, (self._x, self._y ), Bomb_steps[self._bomb_step], (self._w, self._h)) 
         
         if self._bomb_explosion <= (len(Bomb_explosion) - 1) and self._bomb_step > (len(Bomb_steps) - 1):
-            img = "img/bomberman.png"
             g2d.draw_image(img, (self._x, self._y), Bomb_explosion[self._bomb_explosion], (self._w, self._h))
-            self.spawn_explosion(arena, img)
+            self.spawn_explosion(arena)
         
         if self._bomb_explosion > (len(Bomb_explosion) - 1):
                     
             #destroy objects and bomb
             self.destroy_objects(arena)
-            arena.kill(self)
+            arena.kill(self, 0)
 
 
-    def spawn_explosion(self, arena: Arena, img):
+    def spawn_explosion(self, arena: Arena):
 
         center = self.is_colliding(self._x, self._y, arena)
 
