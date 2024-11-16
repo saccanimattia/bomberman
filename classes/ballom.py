@@ -1,6 +1,5 @@
 from classes.actor import Actor, Point, Arena, check_collision
 from classes.wall import Wall
-from classes.bomberman import Bomberman
 from random import choice
 
 TILE, STEP = 16, 2
@@ -60,8 +59,6 @@ class Ballom(Actor):
             if isinstance(actor, Wall) and check_collision(self, actor):
                 self._x -= self._dx
                 self._y -= self._dy
-            if isinstance(actor, Bomberman) and check_collision(self, actor):
-                actor.death_animation(5, 0)
 
     def pos(self) -> Point:
         return self._x, self._y
@@ -72,7 +69,7 @@ class Ballom(Actor):
     def sprite(self) -> Point:
         return self._sprite
     
-    def death_animation(self, speed: int, awaiting: int):
+    def death_animation(self, speed: int, awaiting: int, arena: Arena):
         self._death = True
         self._death_speed = speed
         self._awaiting_death = awaiting

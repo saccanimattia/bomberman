@@ -1,4 +1,5 @@
 from classes.actor import Actor, Point, Arena, check_collision_coordinate
+from classes.powerup import Powerup
 from classes.wall import Wall
 import lib.g2d as g2d
 
@@ -44,6 +45,7 @@ class Bomb(Actor):
         self._bomb_explosion = 0
         self._counter = 0
         self._sprite = Bomb_steps[self._bomb_explosion]
+        
 
     def move(self, arena: Arena):
         
@@ -150,7 +152,7 @@ class Bomb(Actor):
                 if actor.getType() == "indestructible":
                     return 0
                 return 1
-            elif isinstance(actor, Wall) == False and check_collision_coordinate(actor, x, y, self._w, self._h) and isinstance(actor, Bomb) == False:
+            elif isinstance(actor, Wall) == False and isinstance(actor, Powerup) == False and check_collision_coordinate(actor, x, y, self._w, self._h) and isinstance(actor, Bomb) == False:
                 return 3
         return 2
 
@@ -190,7 +192,7 @@ class Bomb(Actor):
         for actor in arena.actors():
             if check_collision_coordinate(actor, x, y, self._w, self._h):
                 if actor.isDying() == False and isinstance(actor, Bomb) == False:
-                    actor.death_animation(1, 5)
+                    actor.death_animation(1, 5, arena)
                     break
 
     def pos(self) -> Point:
@@ -202,7 +204,7 @@ class Bomb(Actor):
     def sprite(self) -> Point:
         return self._sprite
     
-    def death_animation(self, speed: int, awaiting: int):
+    def death_animation(self, speed: int, awaiting: int, arena: Arena):
         pass
     
     def isDying(self):

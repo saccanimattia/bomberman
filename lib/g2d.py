@@ -103,7 +103,7 @@ def draw_text(txt: str, pos: Point, size: int, fname: str, align: str) -> None:
     elif fname in fonts:
         font = pg.font.SysFont(fname, int(size))
     else:
-        font = pg.font.Font("freesansbold", int(size))
+        font = pg.font.SysFont("freesansbold", int(size))
         
     surface = font.render(txt, True, _color)
     if len(_color) > 3 and _color[3] != 255:
@@ -231,7 +231,6 @@ def main_loop(tick=None, fps: int=30) -> None:
 
 def close_canvas() -> None:
     pg.quit()
-    sys.exit()
 
 def load_fonts_from_folder(folder_path: str) -> dict[str, pg.font.FontType] or False:
     """

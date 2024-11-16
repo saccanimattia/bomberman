@@ -1,4 +1,6 @@
 from classes.actor import Actor, Point, Arena
+from classes.powerup import Powerup
+from random import randint
 
 TILE, STEP = 16, 4
 
@@ -7,6 +9,8 @@ Wall_types = {
     "indestructible": (48, 48),
     "door": (176, 48)
 }
+
+Powerup_types = ["bomb_immunity","speed"]
 
 Wall_destroying_steps = [(80, 48), (96, 48), (112, 48), (128, 48), (144, 48), (160, 48)]
 
@@ -45,6 +49,7 @@ class Wall(Actor):
                     return
                 else:
                     arena.kill(self, -25)
+                    self.spawn_powerup(arena)
                     return
             self._counter += 1
             if self._counter % self._death_speed == 0:
@@ -64,7 +69,7 @@ class Wall(Actor):
     def sprite(self) -> Point:
         return self._sprite
     
-    def death_animation(self, speed: int, awaiting: int):
+    def death_animation(self, speed: int, awaiting: int, arena: Arena):
         self._death = True
         self._death_speed = 2
         self._awaiting_death = 0
@@ -79,3 +84,10 @@ class Wall(Actor):
         if self._sprite ==  (64, 48):
             return True
         return False
+    
+    def spawn_powerup(self, arena: Arena):
+        powerup_possibility = randint(0, 10)
+        if powerup_possibility == 0:
+            arena.spawn(Powerup((self._x, self._y), Powerup_types[0]))
+        elif powerup_possibility == 1:
+            arena.spawn(Powerup((self._x, self._y), Powerup_types[1]))

@@ -1,31 +1,26 @@
-#!/usr/bin/env python3
-"""
-@author  Michele Tomaiuolo - https://tomamic.github.io/
-@license This software is free - https://opensource.org/license/mit
-"""
+import lib.g2d as g2d
+from classes.bomberman_game_state import BombermanGameState
 
-from classes.actor import Arena, check_collision_coordinate, Point
-from classes.bomb import Bomb
-from classes.wall import Wall
-from classes.bomberman import Bomberman
-from classes.ballom import Ballom
-from classes.bomberman_gui import BombermanGui
 
-from random import randint
-
-def tick():
-    bombermanGui.tick()
+def tick(state: BombermanGameState):
+    if state.get_phase() == "start":
+        state.get_start().show()
+        keys = g2d.current_keys()
+        if "Enter" in keys:
+            g2d.close_canvas()
+            state.set_phase("game")
+            state.get_bombermanGui1().create_arena()
+    elif state.get_phase() == "game":
+        state.get_bombermanGui1().tick()
 
 def main():
-    global bombermanGui
-    bombermanGui = BombermanGui("easy")
-    bombermanGui.create_arena()
-    import lib.g2d as g2d
-    g2d.main_loop(tick)
-    
-   
+    state = BombermanGameState()
+    global info_div_w
+    info_div_w = 500
+    global info_div_h
+    info_div_h = 500
+    g2d.init_canvas((info_div_w, info_div_h))
+    g2d.main_loop(lambda: tick(state))  # Passa lo stato al tick
 
 if __name__ == "__main__":
     main()
-
-

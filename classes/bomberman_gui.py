@@ -4,6 +4,7 @@ from classes.wall import Wall
 from classes.bomberman import Bomberman
 from classes.ballom import Ballom
 from classes.scorer import Scorer
+from classes.powerup import Powerup
 import lib.g2d as g2d
 
 from random import randint
@@ -13,7 +14,7 @@ difficulties = {
         "arena_width": 368,
         "arena_height": 240,
         "scorer_height": 64,
-        "time": 5,
+        "time": 180,
         "actor_file_path": "src/actors/easy.txt"
     }, 
     "medium": {
@@ -126,6 +127,15 @@ class BombermanGui:
                         self._arena.add_points(1000)
                         return True      
         return False
+
+    def _check_powerups(self):
+        bomberman = self.is_bomberman_died()
+        if isinstance(bomberman, Bomberman) == False:
+            return
+        for actor in self._arena.actors():
+            if isinstance(actor, Powerup):
+                if actor.pos() == bomberman.pos():
+                    actor.death_animation(0,0, Arena)
             
     
     def tick(self):
@@ -139,6 +149,8 @@ class BombermanGui:
             g2d.draw_image(img, a.pos(), a.sprite(), a.size())
         keys = g2d.current_keys()
         self._arena.tick(keys)  # Game logic
+        self._check_powerups()
+                    
         if self.is_bomberman_died() == True:
             g2d.set_color((255, 255, 255))
             g2d.draw_rect((0,0), (self._arena_width, (self._arena_height + self._scorer_height)))

@@ -1,4 +1,6 @@
 from classes.actor import Actor, Point, Arena, check_collision
+from classes.ballom import Ballom
+from classes.powerup import Powerup
 from classes.wall import Wall
 from classes.bomb import Bomb
 
@@ -51,7 +53,14 @@ class Bomberman(Actor):
                 self._sprite = Bomberman_destroying_steps[self._death_step]
                 self._death_step += 1
             return
-
+        
+        #powerup
+        powerups = self._check_powerup_types(arena)
+        if "speed" in powerups:
+            self._speed = 4
+        else:
+            self._speed = 2
+            
         #movement
         if self._x % TILE == 0 and self._y % TILE == 0:
             keys = arena.current_keys()
@@ -95,6 +104,12 @@ class Bomberman(Actor):
                 self._x -= self._dx
                 self._y -= self._dy
                 break
+            
+        #collision with ballom
+        for actor in arena.actors():
+            if isinstance(actor, Ballom) and check_collision(self, actor):
+                self.death_animation(1, 5, arena)
+                break
                     
 
     def pos(self) -> Point:
@@ -106,10 +121,19 @@ class Bomberman(Actor):
     def sprite(self) -> Point:
         return self._sprite
     
-    def death_animation(self, speed: int, awaiting: int):
+    def death_animation(self, speed: int, awaiting: int, arena: Arena):
+        powerups = self._check_powerup_types(arena)
+        if "bomb_immunity" in powerups:
+            if self.check_enemies_collisions(arena) == True:
+                self._death = True
+                self._death_speed = speed
+                self._awaiting_death = awaiting 
+            return
+    
         self._death = True
         self._death_speed = speed
         self._awaiting_death = awaiting
+        
     
     def check_if_bomb(self, arena: Arena):
         for actor in arena.actors():
@@ -119,3 +143,19 @@ class Bomberman(Actor):
     
     def isDying(self):
         return self._death
+    
+    def _check_powerup_types(self, arena: Arena):
+        powerups = []
+        for actor in arena.actors():
+            if isinstance(actor, Powerup):
+                if actor.get_type() == "speed" and actor.isDying() == True:
+                    powerups.append("speed")
+                if actor.get_type() == "bomb_immunity" and actor.isDying() == True:
+                    powerups.append("bomb_immunity")
+        return powerups
+    
+    def check_enemies_collisions(self, arena: Arena):
+        for actor in arena.actors():
+            if isinstance(actor, Ballom) and check_collision(self, actor):
+                return True
+        return False
