@@ -18,15 +18,15 @@ difficulties = {
         "actor_file_path": "src/actors/easy.txt"
     }, 
     "medium": {
-        "arena_width": 496,
-        "arena_height": 336,
+        "arena_width": 400,
+        "arena_height": 240,
         "scorer_height": 64,
         "time": 240,
         "actor_file_path": "src/actors/medium.txt"
     },
     "hard": {
-        "arena_width": 560,
-        "arena_height": 336,
+        "arena_width": 432,
+        "arena_height": 272,
         "scorer_height": 64,
         "time": 300,
         "actor_file_path": "src/actors/high.txt"
@@ -47,14 +47,19 @@ class BombermanGui:
         self._arena = Arena((self._arena_width, self._arena_height))
         self._scorer = Scorer((0,0),(self._arena_width, self._scorer_height), self._time, self._arena)
         
-    def create_arena(self):
+    def create_arena(self, players):
         
-        g2d.init_canvas((self._arena_width, self._arena_height + self._scorer_height))    
+        self._arena.reset()
+        self._scorer.reset()
+        g2d.resize_canvas((self._arena_width, self._arena_height + self._scorer_height))
         
         self.create_border()
         self.create_field()
         
         self.spawn_actors()
+        
+        if players == 2:
+            self._arena.spawn(Bomberman((self._arena_width - 32, (self._arena_height + self._scorer_height) - 32), "second"))
         
         return
 
@@ -89,7 +94,7 @@ class BombermanGui:
                     self._arena.spawn(Ballom((int(actor[1]), ( int(actor[2]) + self._scorer_height ))))
                 
                 elif actor[0] == "Bomberman":
-                    self._arena.spawn(Bomberman((int(actor[1]), ( int(actor[2]) + self._scorer_height ))))
+                    self._arena.spawn(Bomberman((int(actor[1]), ( int(actor[2]) + self._scorer_height)), "first"))
                 
     def getArena(self):
         return self._arena
@@ -124,7 +129,7 @@ class BombermanGui:
             if isinstance(actor, Wall):
                 if actor.is_door() == True and actor.isDying() == True:
                     if actor.pos() == bomberman.pos():
-                        self._arena.add_points(1000)
+                        self._arena.add_points(500)
                         return True      
         return False
 
@@ -152,19 +157,16 @@ class BombermanGui:
         self._check_powerups()
                     
         if self.is_bomberman_died() == True:
-            g2d.set_color((255, 255, 255))
-            g2d.draw_rect((0,0), (self._arena_width, (self._arena_height + self._scorer_height)))
-            g2d.set_color((255, 0, 0))
-            g2d.draw_text("game over", (self._arena_width//2, (self._arena_height + self._scorer_height)//2), 30, "BombermanFont.ttf", "center")
+            return False
             
         if self.check_win() == True:
-            g2d.set_color((255, 255, 255))
-            g2d.draw_rect((0,0), (self._arena_width, (self._arena_height + self._scorer_height)))
-            g2d.set_color((0, 0, 255))
-            g2d.draw_text("hai vinto", (self._arena_width//2, (self._arena_height + self._scorer_height)//2), 30, "BombermanFont.ttf", "center")
+           return True
             
         if self._scorer.create() == False:
-            g2d.set_color((255, 255, 255))
-            g2d.draw_rect((0,0), (self._arena_width, (self._arena_height + self._scorer_height)))
-            g2d.set_color((255, 0, 0))
-            g2d.draw_text("game over", (self._arena_width//2, (self._arena_height + self._scorer_height)//2), 30, "BombermanFont.ttf", "center")
+            return False
+        
+    def get_points(self):
+        return self._arena.get_points()
+    
+    def set_points(self, points):
+        self._arena.add_points(points)

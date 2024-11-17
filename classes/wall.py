@@ -48,7 +48,7 @@ class Wall(Actor):
                     self._sprite = Wall_types["door"]
                     return
                 else:
-                    arena.kill(self, -25)
+                    arena.kill(self, +10)
                     self.spawn_powerup(arena)
                     return
             self._counter += 1

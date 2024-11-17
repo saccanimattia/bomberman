@@ -172,3 +172,11 @@ class Arena():
         """Return the keys pressed at last tick.
         """
         return self._prev_keys
+    
+    def reset(self):
+        self._count = 0
+        self._turn = -1
+        self._actors = []
+        self._curr_keys = self._prev_keys = tuple()
+        self._collisions = []
+        self._points = 0

@@ -24,7 +24,6 @@ Wall,128,144,destroyable
 Wall,160,48,destroyable
 Wall,192,112,destroyable
 Wall,192,176,destroyable
-Wall,192,48,destroyable
 Wall,256,112,destroyable
 Wall,256,176,destroyable
 Wall,320,16,destroyable
@@ -34,8 +33,6 @@ Wall,16,208,destroyable
 Wall,48,112,destroyable
 Wall,144,16,destroyable
 Wall,144,80,destroyable
-Wall,208,80,destroyable
-Wall,240,80,destroyable
 Wall,240,112,destroyable
 Wall,272,80,destroyable
 Wall,272,112,destroyable

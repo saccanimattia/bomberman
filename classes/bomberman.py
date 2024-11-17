@@ -7,25 +7,40 @@ from classes.bomb import Bomb
 TILE, STEP = 16, 2
 
 Bomberman_steps = {
-    "ArrowUp": [(48, 16), (64, 16), (80, 16)],
-    "ArrowDown": [(48, 0),(64, 0), (80, 0)],
-    "ArrowLeft": [(0, 0), (16, 0), (32, 0)],
-    "ArrowRight": [(0, 16), (16, 16), (32, 16)],
-}  
+    "first": {
+        "ArrowUp": [(48, 16), (64, 16), (80, 16)],
+        "ArrowDown": [(48, 0),(64, 0), (80, 0)],
+        "ArrowLeft": [(0, 0), (16, 0), (32, 0)],
+        "ArrowRight": [(0, 16), (16, 16), (32, 16)],
+    },
+    "second": {
+        "w": [(48, 16), (64, 16), (80, 16)],
+        "s": [(48, 0),(64, 0), (80, 0)],
+        "a": [(0, 0), (16, 0), (32, 0)],
+        "d": [(0, 16), (16, 16), (32, 16)],
+    }
+}
+
+Commands = {
+    "first": ["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", "Spacebar"],
+    "second": ["w", "s", "a", "d", "q"]
+}
+ 
 
 Bomberman_destroying_steps = [(0, 32), (16, 32), (32, 32), (48, 32), (64, 32), (80, 32), (96, 32)]
 
 class Bomberman(Actor):
-    def __init__(self, pos):
+    def __init__(self, pos, key_comb):
         
         #position
         self._x, self._y = pos
         self._dx, self._dy = 0, 0
         self._prev_dx, self._prev_dy = 0, 0
         self._w, self._h = TILE, TILE
+        self._key_comb = key_comb
         
         #sprite
-        self._sprite = Bomberman_steps["ArrowDown"][1]
+        self._sprite = Bomberman_steps["first"]["ArrowDown"][0]
         
         #movement
         self._speed = STEP
@@ -46,7 +61,7 @@ class Bomberman(Actor):
                 self._awaiting_death -= 1
                 return
             if self._death_step > (len(Bomberman_destroying_steps) - 1):
-                arena.kill(self, 0)
+                arena.kill(self, -200)
                 return
             self._counter += 1
             if self._counter % self._death_speed == 0:
@@ -68,20 +83,20 @@ class Bomberman(Actor):
             self._prev_dx, self._prev_dy = self._dx, self._dy
             self._dx, self._dy = 0, 0
 
-            if "Spacebar" in keys and not self.check_if_bomb(arena):
-                arena.spawn(Bomb((self._x, self._y)))
+            if Commands[self._key_comb][4] in keys and not self.check_if_bomb(arena):
+                arena.spawn(Bomb((self._x, self._y), Commands[self._key_comb][4]))    
 
-            if "ArrowUp" in keys:
-                direction_key = "ArrowUp"
+            if Commands[self._key_comb][0] in keys:
+                direction_key = Commands[self._key_comb][0]
                 self._dy = -self._speed
-            elif "ArrowDown" in keys:
-                direction_key = "ArrowDown"
+            elif Commands[self._key_comb][1] in keys:
+                direction_key = Commands[self._key_comb][1]
                 self._dy = self._speed
-            elif "ArrowLeft" in keys:
-                direction_key = "ArrowLeft"
+            elif Commands[self._key_comb][2] in keys:
+                direction_key = Commands[self._key_comb][2]
                 self._dx = -self._speed
-            elif "ArrowRight" in keys:
-                direction_key = "ArrowRight"
+            elif Commands[self._key_comb][3] in keys:
+                direction_key = Commands[self._key_comb][3]
                 self._dx = self._speed
 
             if self._dx == self._prev_dx and self._dy == self._prev_dy :
@@ -90,7 +105,7 @@ class Bomberman(Actor):
                 self._same_direction_count = 1
             
             if direction_key:
-                self._sprite = Bomberman_steps[direction_key][self._same_direction_count % 3]
+                self._sprite = Bomberman_steps[self._key_comb][direction_key][self._same_direction_count % 3]
 
 
         self._x += self._dx
@@ -138,7 +153,8 @@ class Bomberman(Actor):
     def check_if_bomb(self, arena: Arena):
         for actor in arena.actors():
             if isinstance(actor, Bomb):
-                return True
+               if actor.get_spawned_key() == Commands[self._key_comb][4]:
+                   return True
         return False
     
     def isDying(self):

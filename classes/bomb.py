@@ -32,7 +32,7 @@ TILE = 16
 img = "src/img/bomberman.png"
 
 class Bomb(Actor):
-    def __init__(self, pos):
+    def __init__(self, pos, spawned_key):
         
         #position
         self._x, self._y = pos
@@ -45,6 +45,9 @@ class Bomb(Actor):
         self._bomb_explosion = 0
         self._counter = 0
         self._sprite = Bomb_steps[self._bomb_explosion]
+        
+        #spawner
+        self._spawned_key = spawned_key
         
 
     def move(self, arena: Arena):
@@ -75,7 +78,7 @@ class Bomb(Actor):
                     
             #destroy objects and bomb
             self.destroy_objects(arena)
-            arena.kill(self, 0)
+            arena.kill(self, -50)
 
 
     def spawn_explosion(self, arena: Arena):
@@ -167,7 +170,7 @@ class Bomb(Actor):
         middle_right = self.is_colliding(self._x + 16, self._y, arena)
         end_right = self.is_colliding(self._x + 32, self._y, arena)
         
-        if middle_up != 0 and end_up == 1:
+        if middle_up == 2 and end_up == 1:
             self.destroy(self._x, self._y - 32, arena)
         if middle_up == 1 :
             self.destroy(self._x, self._y - 16, arena)
@@ -209,3 +212,6 @@ class Bomb(Actor):
     
     def isDying(self):
         return False
+    
+    def get_spawned_key(self):
+        return self._spawned_key

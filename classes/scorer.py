@@ -13,6 +13,7 @@ class Scorer:
         self._x, self._y = pos
         self._w, self._h = dimension
         self._time = time
+        self._start_time = time
         self._arena = arena
         self._counter = 0
         
@@ -45,3 +46,7 @@ class Scorer:
         points_string = "points : " + str(self._arena.get_points())
         g2d.set_color((176, 176, 176))
         g2d.draw_text(str(points_string), ((self._w//2 + self._w//4), 32), 16, font, "center")
+    
+    def reset(self):
+        self._time = self._start_time
+        self._counter = 0

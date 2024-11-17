@@ -22,7 +22,7 @@ class Powerup(Actor):
         
         #expiration
         self._expiration = False
-        self._expiration_time = 10
+        self._expiration_time = 5
         self._counter = 0
 
 
@@ -36,7 +36,7 @@ class Powerup(Actor):
                 self._counter = 0
             self._counter += 1
             if self._expiration_time == 0:
-                arena.kill(self, 0)
+                arena.kill(self, 25)
                 return
     
     def get_type(self):

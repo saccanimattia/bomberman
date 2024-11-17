@@ -231,6 +231,7 @@ def main_loop(tick=None, fps: int=30) -> None:
 
 def close_canvas() -> None:
     pg.quit()
+    sys.exit()
 
 def load_fonts_from_folder(folder_path: str) -> dict[str, pg.font.FontType] or False:
     """
@@ -260,3 +261,10 @@ def load_fonts_from_folder(folder_path: str) -> dict[str, pg.font.FontType] or F
     else:
         print("folder path does not exist")
         return False
+
+def resize_canvas(new_size: Point):
+    global _canvas, _display, _size
+    _size = _tup(new_size)
+    _display = pg.display.set_mode((new_size[0], new_size[1])) 
+    _canvas = pg.Surface(_size, pg.SRCALPHA) 
+    update_canvas() 
