@@ -36,7 +36,7 @@ class Actor:
         """
         raise NotImplementedError("Abstract method")
     
-    def isDying(self) -> bool:
+    def is_dying(self) -> bool:
         """Return True if the actor is being destroyed, False otherwise.
         """
         raise NotImplementedError("Abstract method")

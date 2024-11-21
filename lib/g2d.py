@@ -98,6 +98,7 @@ def draw_text(txt: str, pos: Point, size: int, fname: str, align: str) -> None:
     fonts_folder = "./fonts"
     loaded_fonts = load_fonts_from_folder(fonts_folder)
     
+    #check where the font is
     if loaded_fonts != False and fname in loaded_fonts:
         font = pg.font.Font(("./lib/fonts/" + fname), int(size))
     elif fname in fonts:
@@ -109,6 +110,7 @@ def draw_text(txt: str, pos: Point, size: int, fname: str, align: str) -> None:
     if len(_color) > 3 and _color[3] != 255:
         surface.set_alpha(_color[3])
     (x, y), (w, h) = _tup(pos), surface.get_size()
+    # align: start, center, end cases
     if align == "center":
         x = x - w//2
     if align == "end":  
@@ -235,7 +237,7 @@ def close_canvas() -> None:
 
 def load_fonts_from_folder(folder_path: str) -> dict[str, pg.font.FontType] or False:
     """
-    load fonts in folder ./fonts
+    check loadad fonts in folder ./fonts
     """
     
     fonts_folder = os.path.join(os.path.dirname(__file__), "fonts")
@@ -249,6 +251,7 @@ def load_fonts_from_folder(folder_path: str) -> dict[str, pg.font.FontType] or F
             if font_file.lower().endswith(supported_formats):
                 font_path = os.path.join(fonts_folder, font_file)
                 try:
+                    #check if the font is possible to load and use
                     font = pg.font.Font(font_path, 24)
                     fontName = font_file.split(".")[0]
                     loaded_fonts[font_file] = font
@@ -263,8 +266,18 @@ def load_fonts_from_folder(folder_path: str) -> dict[str, pg.font.FontType] or F
         return False
 
 def resize_canvas(new_size: Point):
+    """Resize the canvas to new_size"""
     global _canvas, _display, _size
     _size = _tup(new_size)
-    _display = pg.display.set_mode((new_size[0], new_size[1])) 
+    # change the size of the canvas
+    _display = pg.display.set_mode((new_size[0], new_size[1]))
     _canvas = pg.Surface(_size, pg.SRCALPHA) 
     update_canvas() 
+
+def add_key(key: str):
+    """utils to add a key"""
+    _curr_keys.add(key)
+    
+def remove_keys():
+    """utils to remove all keys"""
+    _curr_keys.clear()

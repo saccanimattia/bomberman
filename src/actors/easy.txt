@@ -38,9 +38,9 @@ Wall,272,80,destroyable
 Wall,272,112,destroyable
 Wall,272,144,destroyable
 Wall,304,80,destroyable
-Ballom,224,176
-Ballom,192,144
-Ballom,80,112
-Ballom,320,80
-Ballom,112,48
+Ballom,224,176,first
+Ballom,192,144,second
+Ballom,80,112,third
+Ballom,320,80,third
+Ballom,112,48,first
 Bomberman,16,16

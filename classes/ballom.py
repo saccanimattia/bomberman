@@ -4,10 +4,21 @@ from random import choice
 
 TILE, STEP = 16, 2
 
-Ballom_destroying_steps = [(96, 240), (112, 240), (128, 240), (144, 240), (160, 240)]
+BALLOM_DESTROYING_STEPS = {
+    "first": [(96, 240), (112, 240), (128, 240), (144, 240), (160, 240)],
+    "second": [(96, 256), (112, 272), (128, 272), (144, 272), (160, 272)],
+    "third": [(96, 304), (112, 304), (128, 304), (144, 304), (160, 304)]
+}
+
+BALLOM_MOVING_STEPS = {
+    "first": [(0, 240), (16, 240), (32, 240), (48, 240), (64, 240), (80, 240)],
+    "second": [(0, 256), (16, 256), (32, 256), (48, 256), (64, 256), (80, 256)],
+    "third": [(0, 304), (16, 304), (32, 304), (48, 304), (64, 304), (80, 304)]
+}
 
 class Ballom(Actor):
-    def __init__(self, pos):
+    def __init__(self, pos, type):
+        
         
         #position
         self._x, self._y = pos
@@ -16,7 +27,17 @@ class Ballom(Actor):
         self._w, self._h = TILE, TILE
         
         #sprite
-        self._sprite = (0, 240)
+        self._timer = 0
+        self._type = type
+        self._sprite_index = 0
+        if type == "first":
+            self._sprite = BALLOM_MOVING_STEPS["first"][self._sprite_index]
+        elif type == "second":
+            self._sprite = BALLOM_MOVING_STEPS["second"][self._sprite_index]
+        elif type == "third":
+            self._sprite = BALLOM_MOVING_STEPS["third"][self._sprite_index]
+        else:
+            raise ValueError("Invalid type")
         
         #movement
         self._speed = STEP
@@ -37,12 +58,12 @@ class Ballom(Actor):
             if self._awaiting_death > 0:
                 self._awaiting_death -= 1
                 return
-            if self._death_step > (len(Ballom_destroying_steps) - 1):
+            if self._death_step > (len(BALLOM_DESTROYING_STEPS) - 1):
                 arena.kill(self, 100)
                 return
             self._counter += 1
             if self._counter % self._death_speed == 0:
-                self._sprite = Ballom_destroying_steps[self._death_step]
+                self._sprite = BALLOM_DESTROYING_STEPS[type][self._death_step]
                 self._death_step += 1
             return
         
@@ -52,6 +73,14 @@ class Ballom(Actor):
             self._dx, self._dy = choice([(0, -STEP), (STEP, 0), (0, STEP), (-STEP, 0)])
         self._x += self._dx
         self._y += self._dy
+        
+        #sprite
+        if self._timer % 10 == 0:
+            self._sprite = BALLOM_MOVING_STEPS[self._type][self._sprite_index]
+            self._sprite_index += 1
+            if self._sprite_index > (len(BALLOM_MOVING_STEPS[self._type]) - 1):
+                self._sprite_index = 0
+        self._timer += 1
         
         #collision with walls and bomberman
 
@@ -74,5 +103,5 @@ class Ballom(Actor):
         self._death_speed = speed
         self._awaiting_death = awaiting
 
-    def isDying(self):
+    def is_dying(self):
         return self._death

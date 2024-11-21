@@ -1,19 +1,24 @@
+#classes 
 from classes.actor import Actor, Point, Arena
 from classes.powerup import Powerup
+
+#modules
 from random import randint
 
+#constants
 TILE, STEP = 16, 4
 
-Wall_types = {
+WALL_TYPES = {
     "destroyable": (64, 48),
     "indestructible": (48, 48),
     "door": (176, 48)
 }
 
-Powerup_types = ["bomb_immunity","speed"]
+POWERUP_TYPES = ["bomb_immunity", "speed"]
 
-Wall_destroying_steps = [(80, 48), (96, 48), (112, 48), (128, 48), (144, 48), (160, 48)]
+WALL_DESTROYING_STEPS = [(80, 48), (96, 48), (112, 48), (128, 48), (144, 48), (160, 48)]
 
+#class
 class Wall(Actor):
     def __init__(self, pos, wall_type: str, is_door: bool):
         
@@ -22,7 +27,7 @@ class Wall(Actor):
         self._w, self._h = TILE, TILE
         
         #sprite
-        self._sprite = Wall_types[wall_type]
+        self._sprite = WALL_TYPES[wall_type]
         self._type = wall_type
         
         #death
@@ -38,14 +43,13 @@ class Wall(Actor):
     def move(self, arena: Arena):
         
         #death animation
-        
         if self._death:
             if self._awaiting_death > 0:
                 self._awaiting_death -= 1
                 return
-            if self._death_step > (len(Wall_destroying_steps) - 1):
+            if self._death_step > (len(WALL_DESTROYING_STEPS) - 1):
                 if self._is_door == True:
-                    self._sprite = Wall_types["door"]
+                    self._sprite = WALL_TYPES["door"]
                     return
                 else:
                     arena.kill(self, +10)
@@ -53,7 +57,7 @@ class Wall(Actor):
                     return
             self._counter += 1
             if self._counter % self._death_speed == 0:
-                self._sprite = Wall_destroying_steps[self._death_step]
+                self._sprite = WALL_DESTROYING_STEPS[self._death_step]
                 self._death_step += 1
             return
     
@@ -74,7 +78,7 @@ class Wall(Actor):
         self._death_speed = 2
         self._awaiting_death = 0
 
-    def isDying(self):
+    def is_dying(self):
         return self._death
     
     def is_door(self):
@@ -88,6 +92,6 @@ class Wall(Actor):
     def spawn_powerup(self, arena: Arena):
         powerup_possibility = randint(0, 10)
         if powerup_possibility == 0:
-            arena.spawn(Powerup((self._x, self._y), Powerup_types[0]))
+            arena.spawn(Powerup((self._x, self._y), POWERUP_TYPES[0]))
         elif powerup_possibility == 1:
-            arena.spawn(Powerup((self._x, self._y), Powerup_types[1]))
+            arena.spawn(Powerup((self._x, self._y), POWERUP_TYPES[1]))

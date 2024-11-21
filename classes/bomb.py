@@ -4,11 +4,10 @@ from classes.wall import Wall
 import lib.g2d as g2d
 
 
-Bomb_steps = [(0, 48), (16, 48), (32, 48)]
+BOMB_STEPS = [(0, 48), (16, 48), (32, 48)]
 
-Bomb_explosion = [(32, 96), (112, 96), (32, 176), (112, 176)]
-
-Bomb_effect = {
+BOMB_EFFECTS = {
+    "center": [(32, 96), (112, 96), (32, 176), (112, 176)],
     "up": {
       "middle": [(32, 80), (112, 80), (32, 160), (112, 160)],
        "end": [(32, 64), (112, 64), (32, 144), (112, 144)]
@@ -29,7 +28,7 @@ Bomb_effect = {
 
 TILE = 16
 
-img = "src/img/bomberman.png"
+IMG = "src/img/bomberman.png"
 
 class Bomb(Actor):
     def __init__(self, pos, spawned_key):
@@ -44,7 +43,7 @@ class Bomb(Actor):
         self._bomb_step = 0
         self._bomb_explosion = 0
         self._counter = 0
-        self._sprite = Bomb_steps[self._bomb_explosion]
+        self._sprite = BOMB_STEPS[self._bomb_explosion]
         
         #spawner
         self._spawned_key = spawned_key
@@ -56,10 +55,10 @@ class Bomb(Actor):
         self._counter += 1
         
         if self._counter % 15 == 0:
-            if self._bomb_step > (len(Bomb_steps) - 1):
-                if self._bomb_explosion < len(Bomb_explosion):
+            if self._bomb_step > (len(BOMB_STEPS) - 1):
+                if self._bomb_explosion < len(BOMB_EFFECTS["center"]):
                     #explosion animation
-                    self._sprite = Bomb_explosion[self._bomb_explosion]
+                    self._sprite = BOMB_EFFECTS["center"][self._bomb_explosion]
                     self._bomb_explosion += 1
                     
             else:
@@ -67,88 +66,101 @@ class Bomb(Actor):
                 #bomb animation
                 self._bomb_step += 1
 
-        if self._bomb_step < len(Bomb_steps):
-            g2d.draw_image(img, (self._x, self._y ), Bomb_steps[self._bomb_step], (self._w, self._h)) 
+        if self._bomb_step < len(BOMB_STEPS):
+            g2d.draw_image(IMG, (self._x, self._y ), BOMB_STEPS[self._bomb_step], (self._w, self._h))
         
-        if self._bomb_explosion <= (len(Bomb_explosion) - 1) and self._bomb_step > (len(Bomb_steps) - 1):
-            g2d.draw_image(img, (self._x, self._y), Bomb_explosion[self._bomb_explosion], (self._w, self._h))
-            self.spawn_explosion(arena)
+        if self._bomb_explosion <= (len(BOMB_EFFECTS["center"]) - 1) and self._bomb_step > (len(BOMB_STEPS) - 1):
+            g2d.draw_image(IMG, (self._x, self._y), BOMB_EFFECTS["center"][self._bomb_explosion], (self._w, self._h))
+            explosion_collisions = self.get_explosion_collisions(arena)
+            self.spawn_explosion(explosion_collisions)
+            self.destroy_objects_during_explosion(arena, explosion_collisions)
         
-        if self._bomb_explosion > (len(Bomb_explosion) - 1):
+        if self._bomb_explosion > (len(BOMB_EFFECTS["center"]) - 1):
                     
             #destroy objects and bomb
             self.destroy_objects(arena)
             arena.kill(self, -50)
 
 
-    def spawn_explosion(self, arena: Arena):
+    def spawn_explosion(self, explosion_collisions: dict[str, int]):
 
-        center = self.is_colliding(self._x, self._y, arena)
+        if(explosion_collisions["middle_up"] != 0):
+            g2d.draw_image(IMG, (self._x, self._y - 16), BOMB_EFFECTS["up"]["end"][self._bomb_explosion], (self._w, self._h))
+        if(explosion_collisions["middle_up"] == 2 or explosion_collisions["middle_up"] == 3):
+            if explosion_collisions["end_up"] != 0:
+                g2d.draw_image(IMG, (self._x, self._y - 16), BOMB_EFFECTS["up"]["middle"][self._bomb_explosion], (self._w, self._h))
+                g2d.draw_image(IMG, (self._x, self._y - 32), BOMB_EFFECTS["up"]["end"][self._bomb_explosion], (self._w, self._h))
 
-        if(center == 3):
+        if(explosion_collisions["middle_down"] != 0):
+            g2d.draw_image(IMG, (self._x, self._y + 16), BOMB_EFFECTS["down"]["end"][self._bomb_explosion], (self._w, self._h))
+        if(explosion_collisions["middle_down"] == 2 or explosion_collisions["middle_down"] == 3):
+            if explosion_collisions["end_down"] != 0:
+                g2d.draw_image(IMG, (self._x, self._y + 16), BOMB_EFFECTS["down"]["middle"][self._bomb_explosion], (self._w, self._h))
+                g2d.draw_image(IMG, (self._x, self._y + 32), BOMB_EFFECTS["down"]["end"][self._bomb_explosion], (self._w, self._h))
+
+        if(explosion_collisions["middle_left"] != 0):
+            g2d.draw_image(IMG, (self._x - 16, self._y), BOMB_EFFECTS["left"]["end"][self._bomb_explosion], (self._w, self._h))
+        if(explosion_collisions["middle_left"] == 2 or explosion_collisions["middle_left"] == 3):
+            if explosion_collisions["end_left"] != 0:
+                g2d.draw_image(IMG, (self._x - 16, self._y), BOMB_EFFECTS["left"]["middle"][self._bomb_explosion], (self._w, self._h))
+                g2d.draw_image(IMG, (self._x - 32, self._y), BOMB_EFFECTS["left"]["end"][self._bomb_explosion], (self._w, self._h))
+
+        if(explosion_collisions["middle_right"] != 0):
+            g2d.draw_image(IMG, (self._x + 16, self._y), BOMB_EFFECTS["right"]["end"][self._bomb_explosion], (self._w, self._h))
+        if(explosion_collisions["middle_right"] == 2 or explosion_collisions["middle_right"] == 3):
+            if explosion_collisions["end_right"] != 0:
+                g2d.draw_image(IMG, (self._x + 16, self._y), BOMB_EFFECTS["right"]["middle"][self._bomb_explosion], (self._w, self._h))
+                g2d.draw_image(IMG, (self._x + 32, self._y), BOMB_EFFECTS["right"]["end"][self._bomb_explosion], (self._w, self._h))
+         
+        
+    def destroy_objects_during_explosion(self, arena: Arena, explosion_collisions: dict[str, int]):
+        if(explosion_collisions["center"] == 3):
             self.destroy(self._x, self._y, arena)
 
-        middle_up = self.is_colliding(self._x, self._y - 16 , arena)
-        end_up = self.is_colliding(self._x, self._y - 32, arena)
-
-        if(middle_up == 3): 
+        if(explosion_collisions["middle_up"] == 3): 
             self.destroy(self._x, self._y - 16, arena)
-        if(end_up == 3 and (middle_up == 2 or middle_up == 3)):
+        if(explosion_collisions["end_up"] == 3 and (explosion_collisions["middle_up"] == 2 or explosion_collisions["middle_up"] == 3)):
             self.destroy(self._x, self._y - 32, arena)
-
-        if(middle_up != 0):
-            g2d.draw_image(img, (self._x, self._y - 16), Bomb_effect["up"]["end"][self._bomb_explosion], (self._w, self._h))
-        if(middle_up == 2 or middle_up == 3):
-            if end_up != 0:
-                g2d.draw_image(img, (self._x, self._y - 16), Bomb_effect["up"]["middle"][self._bomb_explosion], (self._w, self._h))
-                g2d.draw_image(img, (self._x, self._y - 32), Bomb_effect["up"]["end"][self._bomb_explosion], (self._w, self._h))
-
-        middle_down = self.is_colliding(self._x, self._y + 16, arena)
-        end_down = self.is_colliding(self._x, self._y + 32, arena)
-
-        if(middle_down == 3):
+            
+        if(explosion_collisions["middle_down"] == 3):
             self.destroy(self._x, self._y + 16, arena)
-        if(end_down == 3 and (middle_down == 2 or middle_down == 3)):
+        if(explosion_collisions["end_down"] == 3 and (explosion_collisions["middle_down"] == 2 or explosion_collisions["middle_down"] == 3)):
             self.destroy(self._x, self._y + 32, arena)
-
-        if(middle_down != 0):
-            g2d.draw_image(img, (self._x, self._y + 16), Bomb_effect["down"]["end"][self._bomb_explosion], (self._w, self._h))
-        if(middle_down == 2 or middle_down == 3):
-            if end_down != 0:
-                g2d.draw_image(img, (self._x, self._y + 16), Bomb_effect["down"]["middle"][self._bomb_explosion], (self._w, self._h))
-                g2d.draw_image(img, (self._x, self._y + 32), Bomb_effect["down"]["end"][self._bomb_explosion], (self._w, self._h))
-        
-        middle_left = self.is_colliding(self._x - 16, self._y, arena)
-        end_left = self.is_colliding(self._x - 32, self._y, arena)
-
-        if(middle_left == 3):
+            
+        if(explosion_collisions["middle_left"] == 3):
             self.destroy(self._x - 16, self._y, arena)
-        if(end_left == 3 and (middle_left == 2 or middle_left == 3)):
+        if(explosion_collisions["end_left"] == 3 and (explosion_collisions["middle_left"] == 2 or explosion_collisions["middle_left"] == 3)):
             self.destroy(self._x - 32, self._y, arena)
-
-        if(middle_left != 0):
-            g2d.draw_image(img, (self._x - 16, self._y), Bomb_effect["left"]["end"][self._bomb_explosion], (self._w, self._h))
-        if(middle_left == 2 or middle_left == 3):
-            if end_left != 0:
-                g2d.draw_image(img, (self._x - 16, self._y), Bomb_effect["left"]["middle"][self._bomb_explosion], (self._w, self._h))
-                g2d.draw_image(img, (self._x - 32, self._y), Bomb_effect["left"]["end"][self._bomb_explosion], (self._w, self._h))
-
-        middle_right = self.is_colliding(self._x + 16, self._y, arena)
-        end_right = self.is_colliding(self._x + 32, self._y, arena)
-
-        if(middle_right == 3):
+                   
+        if(explosion_collisions["middle_right"] == 3):
             self.destroy(self._x + 16, self._y, arena)
-        if(end_right == 3 and (middle_right == 2 or middle_right == 3)):
+        if(explosion_collisions["end_right"] == 3 and explosion_collisions["middle_right"] == 2 or (explosion_collisions["middle_right"] == 3)):
             self.destroy(self._x + 32, self._y, arena)
 
-        if(middle_right != 0):
-            g2d.draw_image(img, (self._x + 16, self._y), Bomb_effect["right"]["end"][self._bomb_explosion], (self._w, self._h))
-        if(middle_right == 2 or middle_right == 3):
-            if end_right != 0:
-                g2d.draw_image(img, (self._x + 16, self._y), Bomb_effect["right"]["middle"][self._bomb_explosion], (self._w, self._h))
-                g2d.draw_image(img, (self._x + 32, self._y), Bomb_effect["right"]["end"][self._bomb_explosion], (self._w, self._h))
+    def destroy_objects(self, arena: Arena):
+        
+        explosion_collisions = self.get_explosion_collisions(arena)
+        
+        if explosion_collisions["middle_up"] == 2 and explosion_collisions["end_up"] == 1:
+            self.destroy(self._x, self._y - 32, arena)
+        if explosion_collisions["middle_up"] == 1 :
+            self.destroy(self._x, self._y - 16, arena)
 
+        if explosion_collisions["middle_down"] == 2 and explosion_collisions["end_down"] == 1:
+            self.destroy(self._x, self._y + 32, arena)
+        if explosion_collisions["middle_down"] == 1:
+            self.destroy(self._x, self._y + 16, arena)
+        
+        if explosion_collisions["middle_left"] == 2 and explosion_collisions["end_left"] == 1:
+            self.destroy(self._x - 32, self._y, arena)
+        if explosion_collisions["middle_left"] == 1:
+            self.destroy(self._x - 16, self._y, arena)
 
+        if explosion_collisions["middle_right"] == 2 and explosion_collisions["end_right"] == 1:
+            self.destroy(self._x + 32, self._y, arena)
+        if explosion_collisions["middle_right"] == 1:
+            self.destroy(self._x + 16, self._y, arena)
+            
     def is_colliding(self, x, y, arena: Arena):
         for actor in arena.actors():
             if isinstance(actor, Wall) and check_collision_coordinate(actor, x, y, self._w, self._h):
@@ -158,43 +170,26 @@ class Bomb(Actor):
             elif isinstance(actor, Wall) == False and isinstance(actor, Powerup) == False and check_collision_coordinate(actor, x, y, self._w, self._h) and isinstance(actor, Bomb) == False:
                 return 3
         return 2
-
-    def destroy_objects(self, arena: Arena):
+    
+    def get_explosion_collisions(self, arena: Arena):
         
-        middle_up = self.is_colliding(self._x, self._y - 16, arena)
-        end_up = self.is_colliding(self._x, self._y - 32, arena)
-        middle_down = self.is_colliding(self._x, self._y + 16, arena)
-        end_down = self.is_colliding(self._x, self._y + 32, arena)
-        middle_left = self.is_colliding(self._x - 16, self._y, arena)
-        end_left = self.is_colliding(self._x - 32, self._y, arena)
-        middle_right = self.is_colliding(self._x + 16, self._y, arena)
-        end_right = self.is_colliding(self._x + 32, self._y, arena)
-        
-        if middle_up == 2 and end_up == 1:
-            self.destroy(self._x, self._y - 32, arena)
-        if middle_up == 1 :
-            self.destroy(self._x, self._y - 16, arena)
-
-        if middle_down == 2 and end_down == 1:
-            self.destroy(self._x, self._y + 32, arena)
-        if middle_down == 1:
-            self.destroy(self._x, self._y + 16, arena)
-        
-        if middle_left == 2 and end_left == 1:
-            self.destroy(self._x - 32, self._y, arena)
-        if middle_left == 1:
-            self.destroy(self._x - 16, self._y, arena)
-
-        if middle_right == 2 and end_right == 1:
-            self.destroy(self._x + 32, self._y, arena)
-        if middle_right == 1:
-            self.destroy(self._x + 16, self._y, arena)
+        return {
+            "center": self.is_colliding(self._x, self._y, arena),
+            "middle_up": self.is_colliding(self._x, self._y - 16, arena),
+            "end_up" : self.is_colliding(self._x, self._y - 32, arena),
+            "middle_down" : self.is_colliding(self._x, self._y + 16, arena),
+            "end_down" : self.is_colliding(self._x, self._y + 32, arena),
+            "middle_left" : self.is_colliding(self._x - 16, self._y, arena),
+            "end_left" : self.is_colliding(self._x - 32, self._y, arena),
+            "middle_right" : self.is_colliding(self._x + 16, self._y, arena),
+            "end_right" : self.is_colliding(self._x + 32, self._y, arena)
+        }
         
     
     def destroy(self, x, y, arena: Arena):
         for actor in arena.actors():
             if check_collision_coordinate(actor, x, y, self._w, self._h):
-                if actor.isDying() == False and isinstance(actor, Bomb) == False:
+                if actor.is_dying() == False and isinstance(actor, Bomb) == False:
                     actor.death_animation(1, 5, arena)
                     break
 
@@ -210,7 +205,7 @@ class Bomb(Actor):
     def death_animation(self, speed: int, awaiting: int, arena: Arena):
         pass
     
-    def isDying(self):
+    def is_dying(self):
         return False
     
     def get_spawned_key(self):

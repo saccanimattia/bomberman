@@ -6,9 +6,9 @@ class BombermanGameState:
         self._phase = "start"
         self._points = 0
         self._players = 1
-        self._bombermanGui1 = BombermanGui("easy")
-        self._bombermanGui2 = BombermanGui("medium")
-        self._bombermanGui3 = BombermanGui("hard")
+        self._bomberman_gui1 = BombermanGui("easy")
+        self._bomberman_gui2 = BombermanGui("medium")
+        self._bomberman_gui3 = BombermanGui("hard")
         self._info_div = InfoDiv("start", 250, 250)
         
     def get_phase(self):
@@ -17,14 +17,14 @@ class BombermanGameState:
     def set_phase(self, phase):
         self._phase = phase
         
-    def get_bombermanGui1(self):
-        return self._bombermanGui1
+    def get_bomberman_gui1(self):
+        return self._bomberman_gui1
     
-    def get_bombermanGui2(self):
-        return self._bombermanGui2
+    def get_bomberman_gui2(self):
+        return self._bomberman_gui2
     
-    def get_bombermanGui3(self):
-        return self._bombermanGui3
+    def get_bomberman_gui3(self):
+        return self._bomberman_gui3
     
     def get_info_div(self):
         return self._info_div

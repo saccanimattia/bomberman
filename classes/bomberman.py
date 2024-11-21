@@ -6,7 +6,7 @@ from classes.bomb import Bomb
 
 TILE, STEP = 16, 2
 
-Bomberman_steps = {
+BOMBERMAN_STEPS = {
     "first": {
         "ArrowUp": [(48, 16), (64, 16), (80, 16)],
         "ArrowDown": [(48, 0),(64, 0), (80, 0)],
@@ -21,7 +21,7 @@ Bomberman_steps = {
     }
 }
 
-Commands = {
+COMMANDS = {
     "first": ["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", "Spacebar"],
     "second": ["w", "s", "a", "d", "q"]
 }
@@ -40,7 +40,7 @@ class Bomberman(Actor):
         self._key_comb = key_comb
         
         #sprite
-        self._sprite = Bomberman_steps["first"]["ArrowDown"][0]
+        self._sprite = BOMBERMAN_STEPS["first"]["ArrowDown"][0]
         
         #movement
         self._speed = STEP
@@ -80,23 +80,38 @@ class Bomberman(Actor):
         if self._x % TILE == 0 and self._y % TILE == 0:
             keys = arena.current_keys()
             direction_key = None
-            self._prev_dx, self._prev_dy = self._dx, self._dy
+            if self._dx != 0 or self._dy != 0:
+                self._prev_dx, self._prev_dy = self._dx, self._dy
             self._dx, self._dy = 0, 0
 
-            if Commands[self._key_comb][4] in keys and not self.check_if_bomb(arena):
-                arena.spawn(Bomb((self._x, self._y), Commands[self._key_comb][4]))    
 
-            if Commands[self._key_comb][0] in keys:
-                direction_key = Commands[self._key_comb][0]
+            if COMMANDS[self._key_comb][4] in keys and not self.check_if_bomb(arena, powerups):
+                arena.spawn(Bomb((self._x, self._y), COMMANDS[self._key_comb][4])) 
+                if self._prev_dx == 0 and self._prev_dy == 0:
+                    self._x = self._x + 16
+                else:
+                    
+                    if self._prev_dx > 0:
+                        self._x = self._x - 16
+                    elif self._prev_dx < 0:
+                        self._x = self._x + 16
+                        
+                    if self._prev_dy > 0:
+                        self._y = self._y - 16
+                    elif self._prev_dy < 0:
+                        self._y = self._y + 16
+
+            if COMMANDS[self._key_comb][0] in keys:
+                direction_key = COMMANDS[self._key_comb][0]
                 self._dy = -self._speed
-            elif Commands[self._key_comb][1] in keys:
-                direction_key = Commands[self._key_comb][1]
+            elif COMMANDS[self._key_comb][1] in keys:
+                direction_key = COMMANDS[self._key_comb][1]
                 self._dy = self._speed
-            elif Commands[self._key_comb][2] in keys:
-                direction_key = Commands[self._key_comb][2]
+            elif COMMANDS[self._key_comb][2] in keys:
+                direction_key = COMMANDS[self._key_comb][2]
                 self._dx = -self._speed
-            elif Commands[self._key_comb][3] in keys:
-                direction_key = Commands[self._key_comb][3]
+            elif COMMANDS[self._key_comb][3] in keys:
+                direction_key = COMMANDS[self._key_comb][3]
                 self._dx = self._speed
 
             if self._dx == self._prev_dx and self._dy == self._prev_dy :
@@ -105,17 +120,21 @@ class Bomberman(Actor):
                 self._same_direction_count = 1
             
             if direction_key:
-                self._sprite = Bomberman_steps[self._key_comb][direction_key][self._same_direction_count % 3]
+                self._sprite = BOMBERMAN_STEPS[self._key_comb][direction_key][self._same_direction_count % 3]
 
 
         self._x += self._dx
         self._y += self._dy
 
-        #collision with walls
+        #collision with walls and bombs
         for actor in arena.actors():
             if isinstance(actor, Wall) and check_collision(self, actor):
-                if actor.isDying() == True and actor.is_door() == True:
+                if actor.is_dying() == True and actor.is_door() == True:
                     break
+                self._x -= self._dx
+                self._y -= self._dy
+                break
+            if isinstance(actor, Bomb) and check_collision(self, actor):
                 self._x -= self._dx
                 self._y -= self._dy
                 break
@@ -150,23 +169,23 @@ class Bomberman(Actor):
         self._awaiting_death = awaiting
         
     
-    def check_if_bomb(self, arena: Arena):
+    def check_if_bomb(self, arena: Arena, powerups):
         for actor in arena.actors():
             if isinstance(actor, Bomb):
-               if actor.get_spawned_key() == Commands[self._key_comb][4]:
-                   return True
+                if actor.get_spawned_key() == COMMANDS[self._key_comb][4]:
+                    return True
         return False
     
-    def isDying(self):
+    def is_dying(self):
         return self._death
     
     def _check_powerup_types(self, arena: Arena):
         powerups = []
         for actor in arena.actors():
             if isinstance(actor, Powerup):
-                if actor.get_type() == "speed" and actor.isDying() == True:
+                if actor.get_type() == "speed" and actor.is_dying() == True:
                     powerups.append("speed")
-                if actor.get_type() == "bomb_immunity" and actor.isDying() == True:
+                if actor.get_type() == "bomb_immunity" and actor.is_dying() == True:
                     powerups.append("bomb_immunity")
         return powerups
     
@@ -175,3 +194,6 @@ class Bomberman(Actor):
             if isinstance(actor, Ballom) and check_collision(self, actor):
                 return True
         return False
+    
+    def set_pos(self, x, y):
+        self._x, self._y = x, y

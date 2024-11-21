@@ -1,4 +1,4 @@
-font = "BombermanFont.ttf"
+FONT = "BombermanFont.ttf"
 
 import lib.g2d as g2d
 
@@ -24,7 +24,7 @@ types = {
     "level_finished":{
         "title": "Level Finished",
         "subtitle": "Press Enter to continue",
-        "color": (255, 255, 0),
+        "color": (0, 0, 255),
         "Points": True
     }
 }
@@ -39,10 +39,10 @@ class InfoDiv:
         g2d.set_color((176, 176, 176))
         g2d.draw_rect((0, 0), (self._w, self._h))
         g2d.set_color(types[self._type]["color"])
-        g2d.draw_text(types[self._type]["title"], (self._w//2, self._h//2 - 24), 20, font, "center")
-        g2d.draw_text(types[self._type]["subtitle"], (self._w//2, self._h//2 + 12), 10, font, "center")
+        g2d.draw_text(types[self._type]["title"], (self._w//2, self._h//2 - 24), 20, FONT, "center")
+        g2d.draw_text(types[self._type]["subtitle"], (self._w//2, self._h//2 + 12), 10, FONT, "center")
         if types[self._type]["Points"]:
-            g2d.draw_text("Points: " + str(points), (self._w//2, self._h//2 + 28), 10, font, "center")
+            g2d.draw_text("Points: " + str(points), (self._w//2, self._h//2 + 28), 10, FONT, "center")
 
     def get_type(self):
         return self._type
