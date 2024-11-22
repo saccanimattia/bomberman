@@ -1,25 +1,27 @@
+#imports
 from classes.actor import Actor, Point, Arena, check_collision
 from classes.wall import Wall
 from random import choice
 
-TILE, STEP = 16, 2
+#constants
 
+TILE, STEP = 16, 2
 BALLOM_DESTROYING_STEPS = {
     "first": [(96, 240), (112, 240), (128, 240), (144, 240), (160, 240)],
-    "second": [(96, 256), (112, 272), (128, 272), (144, 272), (160, 272)],
-    "third": [(96, 304), (112, 304), (128, 304), (144, 304), (160, 304)]
+    "second": [(96, 256), (112, 288), (128, 288), (144, 288), (160, 288)],
+    "third": [(96, 320), (112, 272), (128, 272), (144, 272), (160, 272)]
 }
-
 BALLOM_MOVING_STEPS = {
     "first": [(0, 240), (16, 240), (32, 240), (48, 240), (64, 240), (80, 240)],
     "second": [(0, 256), (16, 256), (32, 256), (48, 256), (64, 256), (80, 256)],
-    "third": [(0, 304), (16, 304), (32, 304), (48, 304), (64, 304), (80, 304)]
+    "third": [(0, 320), (16, 320), (32, 320), (48, 320), (64, 320), (80, 320)]
 }
 
+#class
 class Ballom(Actor):
+    
     def __init__(self, pos, type):
-        
-        
+           
         #position
         self._x, self._y = pos
         self._x = self._x // TILE * TILE
@@ -50,10 +52,10 @@ class Ballom(Actor):
         self._counter = 0
         self._death_speed = 1
 
+
     def move(self, arena: Arena):
         
         #death animation
-        
         if self._death:
             if self._awaiting_death > 0:
                 self._awaiting_death -= 1
@@ -63,12 +65,11 @@ class Ballom(Actor):
                 return
             self._counter += 1
             if self._counter % self._death_speed == 0:
-                self._sprite = BALLOM_DESTROYING_STEPS[type][self._death_step]
+                self._sprite = BALLOM_DESTROYING_STEPS[self._type][self._death_step]
                 self._death_step += 1
             return
         
         #movement
-        
         if self._x % TILE == 0 and self._y % TILE == 0:
             self._dx, self._dy = choice([(0, -STEP), (STEP, 0), (0, STEP), (-STEP, 0)])
         self._x += self._dx
@@ -83,7 +84,6 @@ class Ballom(Actor):
         self._timer += 1
         
         #collision with walls and bomberman
-
         for actor in arena.actors():
             if isinstance(actor, Wall) and check_collision(self, actor):
                 self._x -= self._dx
