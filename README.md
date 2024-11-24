@@ -1,26 +1,27 @@
 # Bomberman
 
-## Obiettivo del Gioco
-Bomberman (ボンバーマン, Bonbāman) è un videogioco sviluppato da Hudson Soft. Il gioco originale, intitolato Bomber Man fu rilasciato nel 1983. In Europa, una versione censurata uscì con il titolo Eric and the Floaters. Nel 1985, il gioco fu convertito per il Nintendo Entertainment System (NES). Da quel momento, la serie Bomberman è diventata famosa, mantenendo il suo stile di gioco originale e introducendo la modalità multigiocatore.
+## Game Objective
+Bomberman (ボンバーマン, Bonbāman) is a video game developed by Hudson Soft. The original game, titled *Bomber Man*, was released in 1983. In Europe, a censored version was released under the title *Eric and the Floaters*. In 1985, the game was ported to the Nintendo Entertainment System (NES). Since then, the Bomberman series has gained popularity, retaining its original gameplay style and introducing multiplayer modes.
 *[for more info](https://github.com/pandao/editor.md "for more info")*
 
-## Regole del Gioco
+## Game Rules
 
- + Movimento
-Ogni giocatore può muoversi in qualsiasi direzione (su, giù, sinistra, destra) sulla griglia di gioco, ma non può muoversi attraverso i muri.
- +  Bombe
-I giocatori possono piazzare una sola bomba per volta .Le bombe esplodono dopo un breve periodo di tempo, distruggendo i blocchi e eliminando i giocatori che si trovano nelle vicinanze.
-Le esplosioni si estendono in ogni direzione.
- +  Potenziamenti
-I potenziamenti possono essere trovati distruggendo determinati blocchi e offrono vantaggi come:
-  - Velocità di movimento: aumenta la velocità del giocatore.
-  - Immunita dall'esplosione: il giocatore si può trovare nel raggio dell'esplosione e non morirà <br />
-**ATTENZIONE: i potenziamenti durano solo 5 secondi**
- +  Muri e Ostacoli
-La griglia di gioco è composta da muri solidi e blocchi distruttibili.
-I blocchi distruttibili possono essere distrutti con le esplosioni delle bombe, rivelando potenziamenti mentre i  muri solidi non possono essere distrutti.
- +  Eliminazione dei Giocatori
-Un giocatore viene eliminato se viene colpito da un'esplosione o se viene toccato da un nemico.
+ + **Movement**
+Each player can move in any direction (up, down, left, right) on the game grid but cannot move through walls.
+ + **Bombs**
+Players can place one bomb at a time. Bombs explode after a short period, destroying blocks and eliminating players nearby.
+Explosions extend in all directions.
+ + **Power-ups**
+Power-ups can be found by destroying certain blocks and provide advantages such as:
+  - **Movement Speed:** Increases the player's movement speed.
+  - **Explosion Immunity:** The player can stand within the explosion's radius without dying.  
+**WARNING: Power-ups last for only 5 seconds.**
+ + **Walls and Obstacles**
+The game grid consists of solid walls and destructible blocks.  
+Destructible blocks can be destroyed with bomb explosions, revealing power-ups, while solid walls cannot be destroyed.
+ + **Player Elimination**
+A player is eliminated if they are hit by an explosion or touched by an enemy.
 
-## Modalità di Gioco
-Il gioco e' stato pensato per 1 o 2 giocatori. Si potrà selezionare la modalità di gioco all'inizio premendo o uno o due in base al numero di giocatori che parteciperanno
+## Game Modes
+The game is designed for 1 or 2 players. You can select the game mode at the beginning by pressing 1 or 2, depending on the number of participants.  
+To win, players must complete three levels, with the difficulty increasing progressively.

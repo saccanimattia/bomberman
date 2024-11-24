@@ -1,10 +1,9 @@
+#imports
 import subprocess
 import sys
 
 def run_tests():
-    """
-    run test from unit_test.py thanks to unittest module
-    """
+    """run test from unit_test.py thanks to unittest module"""
     try:
         print("test execution...")
         result = subprocess.run([sys.executable, "-m", "unittest", "unit_test.py"], capture_output=True, text=True)
@@ -20,11 +19,9 @@ def run_tests():
         return False
 
 def start_game():
-    """
-    start game `main.py`.
-    """
+    """start game `main.py`."""
     try:
-        print("start the game...")
+        print("to see all the scripts, please check my public repo: https://github.com/saccanimattia/bomberman")
         subprocess.run([sys.executable, "main.py"])
     except Exception as e:
         print(f"error during game start: {e}")

@@ -1,9 +1,11 @@
+#imports
 from classes.actor import Actor, Point, Arena, check_collision
 from classes.ballom import Ballom
 from classes.powerup import Powerup
 from classes.wall import Wall
 from classes.bomb import Bomb
 
+#constants
 TILE, STEP = 16, 2
 
 BOMBERMAN_STEPS = {
@@ -27,8 +29,9 @@ COMMANDS = {
 }
  
 
-Bomberman_destroying_steps = [(0, 32), (16, 32), (32, 32), (48, 32), (64, 32), (80, 32), (96, 32)]
+BOMBERMAN_DESTROYING_STEPS = [(0, 32), (16, 32), (32, 32), (48, 32), (64, 32), (80, 32), (96, 32)]
 
+#class
 class Bomberman(Actor):
     def __init__(self, pos, key_comb):
         
@@ -60,12 +63,12 @@ class Bomberman(Actor):
             if self._awaiting_death > 0:
                 self._awaiting_death -= 1
                 return
-            if self._death_step > (len(Bomberman_destroying_steps) - 1):
+            if self._death_step > (len(BOMBERMAN_DESTROYING_STEPS) - 1):
                 arena.kill(self, -200)
                 return
             self._counter += 1
             if self._counter % self._death_speed == 0:
-                self._sprite = Bomberman_destroying_steps[self._death_step]
+                self._sprite = BOMBERMAN_DESTROYING_STEPS[self._death_step]
                 self._death_step += 1
             return
         
@@ -84,7 +87,7 @@ class Bomberman(Actor):
                 self._prev_dx, self._prev_dy = self._dx, self._dy
             self._dx, self._dy = 0, 0
 
-
+            #spawn bomb and move bomberman far from the bomb
             if COMMANDS[self._key_comb][4] in keys and not self.check_if_bomb(arena, powerups):
                 arena.spawn(Bomb((self._x, self._y), COMMANDS[self._key_comb][4])) 
                 if self._prev_dx == 0 and self._prev_dy == 0:
@@ -101,6 +104,7 @@ class Bomberman(Actor):
                     elif self._prev_dy < 0:
                         self._y = self._y + 16
 
+            #direction check
             if COMMANDS[self._key_comb][0] in keys:
                 direction_key = COMMANDS[self._key_comb][0]
                 self._dy = -self._speed

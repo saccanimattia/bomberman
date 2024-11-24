@@ -1,8 +1,6 @@
-#classes 
+#imports 
 from classes.actor import Actor, Point, Arena
 from classes.powerup import Powerup
-
-#modules
 from random import randint
 
 #constants

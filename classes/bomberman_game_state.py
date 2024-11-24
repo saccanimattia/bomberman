@@ -1,6 +1,8 @@
+#imports
 from classes.bomberman_gui import BombermanGui
 from classes.info_div import InfoDiv
 
+#class
 class BombermanGameState:
     def __init__(self):
         self._phase = "start"

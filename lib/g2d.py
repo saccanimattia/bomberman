@@ -235,7 +235,7 @@ def close_canvas() -> None:
     pg.quit()
     sys.exit()
 
-def load_fonts_from_folder(folder_path: str) -> dict[str, pg.font.FontType] or False:
+def load_fonts_from_folder(folder_path: str):
     """
     check loadad fonts in folder ./fonts
     """

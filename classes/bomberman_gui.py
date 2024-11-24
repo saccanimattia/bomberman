@@ -1,3 +1,4 @@
+#imports
 from classes.actor import Arena, Point
 from classes.bomb import Bomb
 from classes.wall import Wall
@@ -9,7 +10,7 @@ import lib.g2d as g2d
 
 from random import randint
 
-# Difficulty predefined settings
+# constants
 
 DIFFICULTIES = {
     "easy": {
@@ -37,10 +38,10 @@ DIFFICULTIES = {
 
 IMG = "src/img/bomberman.png"
 
+# class
 class BombermanGui:
     
     def __init__(self, difficulty):
-        """"initialize the game with the given difficulty"""
         
         if difficulty not in DIFFICULTIES:
             raise ValueError("Invalid difficulty")

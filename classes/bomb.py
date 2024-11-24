@@ -83,6 +83,8 @@ class Bomb(Actor):
     def spawn_explosion(self, explosion_collisions: dict[str, int]):
         """draw explosion based on the collisions"""
         
+        #check every block involved in the explosion and draw the explosion
+        
         if(explosion_collisions["middle_up"] != "indestructibleWall"):
             g2d.draw_image(IMG, (self._x, self._y - 16), BOMB_EFFECTS["up"]["end"][self._bomb_explosion], (self._w, self._h))
         if(explosion_collisions["middle_up"] == "actor" or explosion_collisions["middle_up"] == "empty"):
@@ -114,6 +116,8 @@ class Bomb(Actor):
         
     def destroy_objects_during_explosion(self, arena: Arena, explosion_collisions: dict[str, int]):
         
+        #check every block involved in the explosion and destroy the objects during the explosion(balloms and bomberman)
+        
         if(explosion_collisions["center"] == "actor"):
             self.destroy(self._x, self._y, arena)
 
@@ -139,6 +143,7 @@ class Bomb(Actor):
 
     def destroy_objects(self, arena: Arena):
         
+        #check every block involved in the explosion and destroy the objects after the explosion(walls)
         explosion_collisions = self.get_explosion_collisions(arena)
         
         if explosion_collisions["middle_up"] == "empty" and explosion_collisions["end_up"] == "destroyableWall":
@@ -163,6 +168,8 @@ class Bomb(Actor):
             
     def is_colliding(self, x, y, arena: Arena):
         """check who's colliding with the explosion"""
+        
+        #return the type of the object that is colliding with the explosion
         for actor in arena.actors():
             if isinstance(actor, Wall) and check_collision_coordinate(actor, x, y, self._w, self._h):
                 if actor.getType() == "indestructible":
@@ -174,6 +181,7 @@ class Bomb(Actor):
     
     def get_explosion_collisions(self, arena: Arena):
         
+        #return the type of the object that is colliding with the explosion for every block involved in the explosion
         return {
             "center": self.is_colliding(self._x, self._y, arena),
             "middle_up": self.is_colliding(self._x, self._y - 16, arena),

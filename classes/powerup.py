@@ -1,6 +1,8 @@
+#imports
 from classes.actor import Actor, Point, Arena
 from random import randint
 
+#constants
 TILE, STEP = 16, 4
 
 POWERUP_TYPES = {
@@ -8,6 +10,7 @@ POWERUP_TYPES = {
     "bomb_immunity": (96, 224),
 }
 
+#class
 class Powerup(Actor):
     def __init__(self, pos, type: str):
         
@@ -21,7 +24,7 @@ class Powerup(Actor):
         
         #expiration
         self._expiration = False
-        self._expiration_time = 20
+        self._expiration_time = 5
         self._counter = 0
 
     def move(self, arena: Arena):
