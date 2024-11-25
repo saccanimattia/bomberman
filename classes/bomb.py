@@ -52,7 +52,7 @@ class Bomb(Actor):
     def move(self, arena: Arena):
         
         #bomb explosion animation
-        if self._counter % 15 == 0:
+        if self._counter % 20 == 0:
             if self._bomb_step > (len(BOMB_STEPS) - 1):
                 if self._bomb_explosion < len(BOMB_EFFECTS["center"]):
                     #explosion animation

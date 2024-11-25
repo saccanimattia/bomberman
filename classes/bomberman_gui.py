@@ -60,7 +60,7 @@ class BombermanGui:
         self._arena = Arena((self._arena_width, self._arena_height))
         self._scorer = Scorer((0,0),(self._arena_width, self._scorer_height), self._time, self._arena)
         
-    def create_arena(self, players):
+    def create_arena(self, players, scale):
         """create the arena with the given number of players"""
         
         # reset the arena and scorer in case of a restart
@@ -68,7 +68,7 @@ class BombermanGui:
         self._arena.reset()
         self._scorer.reset()
         
-        g2d.resize_canvas((self._arena_width, self._arena_height + self._scorer_height))
+        g2d.resize_canvas((self._arena_width, self._arena_height + self._scorer_height), scale)
         
         # create the field and spawn the actors
         self.create_border()

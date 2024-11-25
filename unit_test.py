@@ -43,7 +43,7 @@ class Test(TestCase):
         bomberman_guis = []
         for difficulty in DIFFICULTIES:
             bomberman_gui = BombermanGui(difficulty)
-            self.assertTrue(bomberman_gui.create_arena(1) != None)
+            self.assertTrue(bomberman_gui.create_arena(1, 1) != None)
             bomberman_guis.append(bomberman_gui)
         return bomberman_guis
       
@@ -167,11 +167,7 @@ class Test(TestCase):
                 bomberman_position = self.get_bomberman_position(bomberman_gui)
                 bomberman_gui.tick()
                 self.check_bomberman_steps(bomberman_gui, key, bomberman_position)
-    
-    
-            
-        
-      
+     
 if __name__ == "__main__":
   main()
 

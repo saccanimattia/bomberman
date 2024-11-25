@@ -93,7 +93,6 @@ class Bomberman(Actor):
                 if self._prev_dx == 0 and self._prev_dy == 0:
                     self._x = self._x + 16
                 else:
-                    
                     if self._prev_dx > 0:
                         self._x = self._x - 16
                     elif self._prev_dx < 0:
@@ -137,10 +136,12 @@ class Bomberman(Actor):
                     break
                 self._x -= self._dx
                 self._y -= self._dy
+                self._dx, self._dy = 0, 0
                 break
             if isinstance(actor, Bomb) and check_collision(self, actor):
                 self._x -= self._dx
                 self._y -= self._dy
+                self._dx, self._dy = 0, 0
                 break
             
         #collision with ballom

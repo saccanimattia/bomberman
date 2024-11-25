@@ -265,13 +265,13 @@ def load_fonts_from_folder(folder_path: str):
         print("folder path does not exist")
         return False
 
-def resize_canvas(new_size: Point):
+def resize_canvas(new_size: Point, scale=1):
     """Resize the canvas to new_size"""
     global _canvas, _display, _size
     _size = _tup(new_size)
     # change the size of the canvas
-    _display = pg.display.set_mode((new_size[0], new_size[1]))
-    _canvas = pg.Surface(_size, pg.SRCALPHA) 
+    _display = pg.display.set_mode((new_size[0]*scale, new_size[1]*scale))
+    _canvas = pg.Surface(_size, pg.SRCALPHA) if scale != 1 else _display 
     update_canvas() 
 
 def add_key(key: str):

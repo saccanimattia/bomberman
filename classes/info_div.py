@@ -15,19 +15,19 @@ TYPES = {
     },
     "game_over": {
         "title": "Game Over",
-        "subtitle": "Press Enter to restart",
+        "subtitle": "Press 1 or 2 for the number of players.",
         "color": (255, 0, 0),
         "Points": True
     },
     "game_won": {
         "title": "You won!",
-        "subtitle": "Press Enter to restart",
+        "subtitle": "Press 1 or 2 for the number of players.",
         "color": (0, 255, 0),
         "Points": True
     },
     "level_finished":{
         "title": "Level Finished",
-        "subtitle": "Press Enter to continue",
+        "subtitle": "Press 1 or 2 for the number of players.",
         "color": (0, 0, 255),
         "Points": True
     }
